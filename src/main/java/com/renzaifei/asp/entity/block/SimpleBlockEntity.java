@@ -69,6 +69,19 @@ public abstract class SimpleBlockEntity extends BlockEntity {
             }
 
             @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                for (int i = 0; i < getSlots(); i++) {
+                    if (i == slot) continue;
+                    ItemStack other = getStackInSlot(i);
+                    if (!other.isEmpty()
+                            && ItemStack.isSameItemSameComponents(other, stack)) {
+                        return stack;
+                    }
+                }
+                return super.insertItem(slot, stack, simulate);
+            }
+
+            @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
                 syncToClient();
@@ -204,26 +217,28 @@ public abstract class SimpleBlockEntity extends BlockEntity {
     }
 
     /**
-     * 存入槽位，其中的一种物品最多存入一个槽位中
-     * @param itemEntity
-     * @param handler
+     * 尝试将物品存入 handler——优先堆叠同种，否则占空槽。同一物品最多占一个槽位。
+     *
+     * @return 未能存入的剩余物品（全部存入则返回 {@code ItemStack.EMPTY}）
      */
-    protected void insertSlot(ItemEntity itemEntity,IItemHandler handler) {
-        if (!itemEntity.isAlive()) return;
-        ItemStack entityStack = itemEntity.getItem();
+    public static ItemStack insertIntoHandler(IItemHandler handler, ItemStack stack) {
         int slots = handler.getSlots();
         int targetSlot = -1;
+
+        // 1. 检查是否已有同种物品：有则只能堆叠到该槽位，满了就拒收
         for (int s = 0; s < slots; s++) {
-            ItemStack stackInSlot = handler.getStackInSlot(s);
-            if (!stackInSlot.isEmpty()
-                    && ItemStack.isSameItemSameComponents(stackInSlot, entityStack)) {
-                int max = Math.min(stackInSlot.getMaxStackSize(), 64);
-                if (stackInSlot.getCount() < max) {
-                    targetSlot = s;
-                    break;
+            ItemStack inSlot = handler.getStackInSlot(s);
+            if (!inSlot.isEmpty()
+                    && ItemStack.isSameItemSameComponents(inSlot, stack)) {
+                int max = Math.min(inSlot.getMaxStackSize(), 64);
+                if (inSlot.getCount() >= max) {
+                    return stack.copy(); // 已满，拒收
                 }
+                targetSlot = s;
+                break;
             }
         }
+        // 2. 没有同种 → 找空槽
         if (targetSlot == -1) {
             for (int s = 0; s < slots; s++) {
                 if (handler.getStackInSlot(s).isEmpty()) {
@@ -232,22 +247,40 @@ public abstract class SimpleBlockEntity extends BlockEntity {
                 }
             }
         }
-        if (targetSlot == -1) return;
+        // 3. 无处可放 → 返回原物品
+        if (targetSlot == -1) return stack.copy();
+
+        // 4. 执行放入
         ItemStack slotStack = handler.getStackInSlot(targetSlot);
         int max = Math.min(slotStack.isEmpty() ? 64 : slotStack.getMaxStackSize(), 64);
         int space = max - slotStack.getCount();
-        int toTake = Math.min(space, entityStack.getCount());
+        int toTake = Math.min(space, stack.getCount());
+        ItemStack leftover = stack.copyWithCount(stack.getCount() - toTake);
+
         if (slotStack.isEmpty()) {
-            handler.insertItem(targetSlot, entityStack.split(toTake), false);
+            handler.insertItem(targetSlot, stack.copyWithCount(toTake), false);
         } else {
-            entityStack.shrink(toTake);
             slotStack.grow(toTake);
             if (handler instanceof ItemStackHandler ish) {
                 ish.setStackInSlot(targetSlot, slotStack);
             }
         }
-        if (entityStack.isEmpty()) {
-            itemEntity.discard();
+        return leftover;
+    }
+
+    /**
+     * 存入槽位，其中的一种物品最多存入一个槽位中
+     * @param itemEntity
+     * @param handler
+     */
+    protected void insertSlot(ItemEntity itemEntity, IItemHandler handler) {
+        if (!itemEntity.isAlive()) return;
+        ItemStack leftover = insertIntoHandler(handler, itemEntity.getItem());
+        if (leftover.getCount() < itemEntity.getItem().getCount()) {
+            itemEntity.setItem(leftover);
+            if (leftover.isEmpty()) {
+                itemEntity.discard();
+            }
         }
     }
 

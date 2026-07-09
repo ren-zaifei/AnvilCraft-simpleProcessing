@@ -16,4 +16,18 @@ repositories {
             includeGroup "com.tterrag.registrate"
         }
     }
+    maven { // JEI
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+        content {
+            includeGroup "mezz.jei"
+        }
+    }
+    maven { // Sodium, Embeddium, Iris, Jade
+        name = "Modrinth Maven"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
 }

@@ -21,6 +21,7 @@ public class AnvilCraftSimpleProcessing {
         ModBlocks.register();
         ModBlockEntities.register();
         ModItemGroups.register(modEventBus);
+        modEventBus.addListener(ModBlockEntities::registerCapabilities);
     }
 
     public static ResourceLocation of(String path) {

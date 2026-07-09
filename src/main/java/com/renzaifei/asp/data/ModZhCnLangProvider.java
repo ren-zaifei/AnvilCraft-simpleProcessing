@@ -15,5 +15,6 @@ public class ModZhCnLangProvider extends LanguageProvider {
         add(ModBlocks.ADVANCED_STAMPING_PLATFORM.get(), "高级冲压平台");
 
         add("itemGroup.anvilcraft_simple_processing.anvilcraft_simple_processing_items" , "铁砧工艺：简易加工");
+
     }
 }

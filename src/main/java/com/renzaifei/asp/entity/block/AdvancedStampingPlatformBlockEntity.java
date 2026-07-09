@@ -25,6 +25,18 @@ public class AdvancedStampingPlatformBlockEntity extends SimpleBlockEntity {
             public boolean isItemValid(int slot, ItemStack stack) {
                 return true;
             }
+            @Override
+            public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+                for (int i = 0; i < getSlots(); i++) {
+                    if (i == slot) continue;
+                    ItemStack other = getStackInSlot(i);
+                    if (!other.isEmpty()
+                            && ItemStack.isSameItemSameComponents(other, stack)) {
+                        return stack;
+                    }
+                }
+                return super.insertItem(slot, stack, simulate);
+            }
 
             @Override
             protected void onContentsChanged(int slot) {

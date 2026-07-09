@@ -1,5 +1,6 @@
 package com.renzaifei.asp.block.interfaces;
 
+import com.renzaifei.asp.entity.block.SimpleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
 public interface ISimpleEntityBlock<T extends BlockEntity> extends EntityBlock {
@@ -90,7 +90,11 @@ public interface ISimpleEntityBlock<T extends BlockEntity> extends EntityBlock {
             }
             return ItemInteractionResult.SUCCESS;
         }
+        if (hand != InteractionHand.MAIN_HAND) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        }
         if (inputHandler == null) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
         if (handStack.isEmpty()) {
             for (int i = inputHandler.getSlots() - 1; i >= 0; i--) {
                 ItemStack taken = inputHandler.extractItem(i,
@@ -102,9 +106,11 @@ public interface ISimpleEntityBlock<T extends BlockEntity> extends EntityBlock {
             }
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        ItemStack remaining = ItemHandlerHelper.insertItem(inputHandler, handStack.copy(), false);
-        if (remaining.getCount() != handStack.getCount()) {
-            player.setItemInHand(hand, remaining);
+        // 手持物品 → 存入
+        ItemStack leftover = SimpleBlockEntity
+                .insertIntoHandler(inputHandler, handStack);
+        if (leftover.getCount() != handStack.getCount()) {
+            player.setItemInHand(hand, leftover);
             return ItemInteractionResult.SUCCESS;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

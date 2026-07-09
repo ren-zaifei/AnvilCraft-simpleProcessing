@@ -16,5 +16,6 @@ public class ModDataGenerator {
         PackOutput packOutput = generator.getPackOutput();
 
         generator.addProvider(event.includeClient(), new ModZhCnLangProvider(packOutput));
+        generator.addProvider(event.includeClient(), new ModEnUsLangProvider(packOutput));
     }
 }
