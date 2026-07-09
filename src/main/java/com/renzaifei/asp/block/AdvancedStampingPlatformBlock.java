@@ -1,0 +1,69 @@
+package com.renzaifei.asp.block;
+
+import com.renzaifei.asp.block.interfaces.ISimpleEntityBlock;
+import com.renzaifei.asp.entity.block.AdvancedStampingPlatformBlockEntity;
+import com.renzaifei.asp.entity.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.block.StampingPlatformBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.items.IItemHandler;
+import org.jetbrains.annotations.Nullable;
+
+public class AdvancedStampingPlatformBlock extends StampingPlatformBlock implements ISimpleEntityBlock<AdvancedStampingPlatformBlockEntity> {
+
+    public AdvancedStampingPlatformBlock(Properties properties) {
+        super(properties);
+    }
+
+    @Override
+    public BlockEntityType<AdvancedStampingPlatformBlockEntity> getBlockEntityType() {
+        return ModBlockEntities.ADVANCED_STAMPING_PLATFORM.get();
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new AdvancedStampingPlatformBlockEntity(getBlockEntityType(), pos, state);
+    }
+
+    @Override
+    public IItemHandler getInputItemHandler(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof AdvancedStampingPlatformBlockEntity be) {
+            return be.getInputItemHandler(null);
+        }
+        return null;
+    }
+
+    @Override
+    public IItemHandler getOutputItemHandler(Level level, BlockPos pos) {
+        return null;
+    }
+
+    @Override
+    @Nullable
+    public BlockEntityTicker<AdvancedStampingPlatformBlockEntity> getBlockEntityTicker() {
+        return AdvancedStampingPlatformBlockEntity::serverTick;
+    }
+
+    @Override
+    public ItemInteractionResult useItemOn(ItemStack handStack, BlockState state,
+                                           Level level, BlockPos pos, Player player,
+                                           InteractionHand hand, BlockHitResult hit) {
+        return ISimpleEntityBlock.super.useItemOn(handStack, state, level, pos, player, hand, hit);
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos,
+                         BlockState newState, boolean movedByPiston) {
+        ISimpleEntityBlock.super.onRemove(state, level, pos, newState, movedByPiston);
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+}

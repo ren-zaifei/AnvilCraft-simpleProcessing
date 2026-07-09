@@ -20,7 +20,7 @@ public class ModItemGroups {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> MOD_ITEMS = DEFERRED_REGISTER.register(
             "anvilcraft_simple_processing_items",
             () -> CreativeModeTab.builder()
-                    .icon(ModBlocks.BRASS_STAMPING_PLATFORM::asStack)
+                    .icon(ModBlocks.ADVANCED_STAMPING_PLATFORM::asStack)
                     .displayItems((ctx, entries) -> {
                     })
                     .title(

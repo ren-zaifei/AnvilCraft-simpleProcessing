@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft_simple_processing:brass_stamping_platform"
+        "recipe": "anvilcraft_simple_processing:advanced_stamping_platform"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -37,7 +37,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft_simple_processing:brass_stamping_platform"
+      "anvilcraft_simple_processing:advanced_stamping_platform"
     ]
   }
 }

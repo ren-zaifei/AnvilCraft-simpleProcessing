@@ -2,6 +2,7 @@ package com.renzaifei.asp;
 
 import com.mojang.logging.LogUtils;
 import com.renzaifei.asp.block.ModBlocks;
+import com.renzaifei.asp.entity.block.ModBlockEntities;
 import com.renzaifei.asp.item.ModItemGroups;
 import com.tterrag.registrate.Registrate;
 import net.minecraft.resources.ResourceLocation;
@@ -18,6 +19,7 @@ public class AnvilCraftSimpleProcessing {
 
     public AnvilCraftSimpleProcessing(IEventBus modEventBus, ModContainer modContainer) {
         ModBlocks.register();
+        ModBlockEntities.register();
         ModItemGroups.register(modEventBus);
     }
 

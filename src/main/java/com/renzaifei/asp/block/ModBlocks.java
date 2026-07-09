@@ -1,5 +1,6 @@
 package com.renzaifei.asp.block;
 
+import com.renzaifei.asp.entity.block.AdvancedStampingPlatformBlockEntity;
 import com.renzaifei.asp.item.ModItemGroups;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
@@ -22,8 +23,8 @@ public class ModBlocks {
 
     public static void register() {}
 
-    public static final BlockEntry<? extends Block> BRASS_STAMPING_PLATFORM = REGISTRATE
-            .block("brass_stamping_platform", BrassStampingPlatformBlock::new)
+    public static final BlockEntry<? extends Block> ADVANCED_STAMPING_PLATFORM = REGISTRATE
+            .block("advanced_stamping_platform", AdvancedStampingPlatformBlock::new)
             .initialProperties(() -> Blocks.IRON_BLOCK)
             .properties(p -> p.isValidSpawn(Blocks::never))
             .blockstate(DataGenUtil::horizontalFacingBlock)
@@ -41,5 +42,6 @@ public class ModBlocks {
                         .unlockedBy(AnvilCraftDatagen.hasItem(ModItemTags.BRASS_INGOTS), AnvilCraftDatagen.has(ModItemTags.BRASS_INGOTS))
                         .save(provider);
             })
+            .simpleBlockEntity(AdvancedStampingPlatformBlockEntity::new)
             .register();
 }

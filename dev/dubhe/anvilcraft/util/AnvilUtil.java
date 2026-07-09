@@ -1,0 +1,28 @@
+package dev.dubhe.anvilcraft.util;
+
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import java.util.List;
+
+public class AnvilUtil {
+    public static void dropItems(List<ItemStack> items, Level level, Vec3 pos) {
+        for (ItemStack item : items) {
+            if (item.isEmpty()) continue;
+            int count = item.getCount();
+            int maxStack = item.getMaxStackSize();
+            for (; count >= maxStack; count -= maxStack) {
+                ItemEntity entity = new ItemEntity(level, pos.x, pos.y, pos.z, item.copyWithCount(maxStack), 0.0, 0.0, 0.0);
+                level.addFreshEntity(entity);
+            }
+            if (count <= 0) continue;
+            ItemEntity entity = new ItemEntity(level, pos.x, pos.y, pos.z, item.copyWithCount(count), 0.0, 0.0, 0.0);
+            entity.anvilcraft$setIsAdsorbable(false);
+            level.addFreshEntity(entity);
+        }
+    }
+
+    private AnvilUtil() {
+    }
+}

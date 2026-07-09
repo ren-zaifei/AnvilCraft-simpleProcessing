@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "anvilcraft_simple_processing:brass_stamping_platform"
+          "name": "anvilcraft_simple_processing:advanced_stamping_platform"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "anvilcraft_simple_processing:blocks/brass_stamping_platform"
+  "random_sequence": "anvilcraft_simple_processing:blocks/advanced_stamping_platform"
 }
