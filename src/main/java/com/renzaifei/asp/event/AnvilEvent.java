@@ -2,11 +2,13 @@ package com.renzaifei.asp.event;
 
 import com.renzaifei.asp.AnvilCraftSimpleProcessing;
 import com.renzaifei.asp.block.ModBlocks;
+import com.renzaifei.asp.entity.block.AdvancedCrushingTableBlockEntity;
 import com.renzaifei.asp.entity.block.AdvancedStampingPlatformBlockEntity;
 import com.renzaifei.asp.util.RecipeUtil;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,6 +32,19 @@ public class AnvilEvent {
         if (hitBlockState.is(ModBlocks.ADVANCED_STAMPING_PLATFORM.get())) {
             onAdvancedStampingPlatform(level, hitBlockPos, hitBlockState);
         }
+        if (hitBlockState.is(ModBlocks.ADVANCED_CRUSHING_TABLE.get())) {
+            onAdvancedCrushingTable(level, hitBlockPos);
+        }
+    }
+
+    private static void onAdvancedCrushingTable(Level level , BlockPos hitBlockPos) {
+        var be = (AdvancedCrushingTableBlockEntity) level.getBlockEntity(hitBlockPos);
+        if (be == null) return;
+        List<ItemStack> outputs = RecipeUtil.craft(
+                ModRecipeTypes.ITEM_CRUSH_TYPE.get(), be.getInputItemHandler(null),
+                (ServerLevel) level);
+        if (outputs.isEmpty()) return;
+        AnvilUtil.dropItems(outputs, level, new Vec3(hitBlockPos.getX() + 0.5, hitBlockPos.getY(), hitBlockPos.getZ() + 0.5));
     }
 
     private static void onAdvancedStampingPlatform(Level level, BlockPos hitBlockPos,
@@ -37,7 +52,8 @@ public class AnvilEvent {
         var be = (AdvancedStampingPlatformBlockEntity) level.getBlockEntity(hitBlockPos);
         if (be == null) return;
         List<ItemStack> outputs = RecipeUtil.craft(
-                ModRecipeTypes.STAMPING_TYPE.get(), be.getInputItemHandler(null));
+                ModRecipeTypes.STAMPING_TYPE.get(), be.getInputItemHandler(null),
+                (ServerLevel) level);
         if (outputs.isEmpty()) return;
         var facing = hitBlockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
         BlockPos frontPos = hitBlockPos.relative(facing);

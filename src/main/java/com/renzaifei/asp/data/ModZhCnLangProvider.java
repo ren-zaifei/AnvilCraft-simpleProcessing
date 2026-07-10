@@ -13,6 +13,7 @@ public class ModZhCnLangProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add(ModBlocks.ADVANCED_STAMPING_PLATFORM.get(), "高级冲压平台");
+        add(ModBlocks.ADVANCED_CRUSHING_TABLE.get(), "高级粉碎台");
 
         add("itemGroup.anvilcraft_simple_processing.anvilcraft_simple_processing_items" , "铁砧工艺：简易加工");
 

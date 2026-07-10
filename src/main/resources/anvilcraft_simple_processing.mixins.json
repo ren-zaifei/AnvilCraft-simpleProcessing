@@ -4,6 +4,7 @@
   "package": "com.renzaifei.asp.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "integration.jei.ItemCrushCategoryMixin",
     "integration.jei.StampingCategoryMixin"
   ],
   "client": [

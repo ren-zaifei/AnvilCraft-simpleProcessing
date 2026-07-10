@@ -30,8 +30,8 @@ public abstract class SimpleBlockEntity extends BlockEntity {
      */
     public SimpleBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
-        this.input = createInventory();
-        this.output = createInventory();
+        this.input = createInventory(1);
+        this.output = createInventory(1);
     }
 
     /**
@@ -39,13 +39,13 @@ public abstract class SimpleBlockEntity extends BlockEntity {
      * @param type
      * @param pos
      * @param blockState
-     * @param input
-     * @param output
+     * @param inputSize
+     * @param outputSize
      */
-    public SimpleBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState ,ItemStackHandler input ,ItemStackHandler output) {
+    public SimpleBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState ,int inputSize ,int outputSize) {
         super(type, pos, blockState);
-        this.input = input;
-        this.output = output;
+        this.input = createInventory(inputSize);
+        this.output = createInventory(outputSize);
     }
 
     /**
@@ -61,8 +61,8 @@ public abstract class SimpleBlockEntity extends BlockEntity {
      * 创建槽位，在构造函数中被调用
      *
      */
-    protected ItemStackHandler createInventory() {
-        return new ItemStackHandler(1) {
+    protected ItemStackHandler createInventory(int size) {
+        return new ItemStackHandler(size) {
             @Override
             public boolean isItemValid(int slot, ItemStack stack) {
                 return true;
@@ -118,6 +118,14 @@ public abstract class SimpleBlockEntity extends BlockEntity {
      */
     public IItemHandler getOutputItemHandler(@Nullable Direction side) {
         return output;
+    }
+
+    /**
+     * 获取组合的物品处理器（input + output），用于 Jade 等模组展示全部槽位。
+     * input 槽位在前，output 槽位在后。
+     */
+    public IItemHandler getCombinedItemHandler() {
+        return new CombinedItemHandler(input, output);
     }
 
     /**
@@ -217,22 +225,29 @@ public abstract class SimpleBlockEntity extends BlockEntity {
     }
 
     /**
-     * 尝试将物品存入 handler——优先堆叠同种，否则占空槽。同一物品最多占一个槽位。
+     * 尝试将物品存入 handler——优先堆叠同种，否则占空槽。
      *
+     * @param handler         目标物品处理器
+     * @param stack            待存入的物品堆
+     * @param requireSameType  为 true 则保证同一物品最多占一个槽位，满了就拒收；
+     *                         为 false 则无此限制，满槽时继续寻找其他可用槽位
      * @return 未能存入的剩余物品（全部存入则返回 {@code ItemStack.EMPTY}）
      */
-    public static ItemStack insertIntoHandler(IItemHandler handler, ItemStack stack) {
+    public static ItemStack insertIntoHandler(IItemHandler handler, ItemStack stack, boolean requireSameType) {
         int slots = handler.getSlots();
         int targetSlot = -1;
 
-        // 1. 检查是否已有同种物品：有则只能堆叠到该槽位，满了就拒收
+        // 1. 检查是否已有同种物品：有则优先堆叠
         for (int s = 0; s < slots; s++) {
             ItemStack inSlot = handler.getStackInSlot(s);
             if (!inSlot.isEmpty()
                     && ItemStack.isSameItemSameComponents(inSlot, stack)) {
                 int max = Math.min(inSlot.getMaxStackSize(), 64);
                 if (inSlot.getCount() >= max) {
-                    return stack.copy(); // 已满，拒收
+                    if (requireSameType) {
+                        return stack.copy();
+                    }
+                    continue;
                 }
                 targetSlot = s;
                 break;
@@ -273,14 +288,70 @@ public abstract class SimpleBlockEntity extends BlockEntity {
      * @param itemEntity
      * @param handler
      */
-    protected void insertSlot(ItemEntity itemEntity, IItemHandler handler) {
+    public void insertSlot(ItemEntity itemEntity, IItemHandler handler) {
         if (!itemEntity.isAlive()) return;
-        ItemStack leftover = insertIntoHandler(handler, itemEntity.getItem());
+        ItemStack leftover = insertIntoHandler(handler, itemEntity.getItem(), true);
         if (leftover.getCount() < itemEntity.getItem().getCount()) {
             itemEntity.setItem(leftover);
             if (leftover.isEmpty()) {
                 itemEntity.discard();
             }
+        }
+    }
+
+    /**
+     * 组合 IItemHandler，将input和output槽位合并
+     */
+    private record CombinedItemHandler(IItemHandler input, IItemHandler output) implements IItemHandler {
+
+        @Override
+        public int getSlots() {
+            return input.getSlots() + output.getSlots();
+        }
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            int inputSlots = input.getSlots();
+            if (slot < inputSlots) {
+                return input.getStackInSlot(slot);
+            }
+            return output.getStackInSlot(slot - inputSlots);
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            int inputSlots = input.getSlots();
+            if (slot < inputSlots) {
+                return input.insertItem(slot, stack, simulate);
+            }
+            return stack;
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            int inputSlots = input.getSlots();
+            if (slot < inputSlots) {
+                return input.extractItem(slot, amount, simulate);
+            }
+            return output.extractItem(slot - inputSlots, amount, simulate);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            int inputSlots = input.getSlots();
+            if (slot < inputSlots) {
+                return input.getSlotLimit(slot);
+            }
+            return output.getSlotLimit(slot - inputSlots);
+        }
+
+        @Override
+        public boolean isItemValid(int slot, ItemStack stack) {
+            int inputSlots = input.getSlots();
+            if (slot < inputSlots) {
+                return input.isItemValid(slot, stack);
+            }
+            return false;
         }
     }
 

@@ -1,12 +1,12 @@
 {
 	"format_version": "1.9.0",
-	"credit": "Made by XeKr with Blockbench",
+	"credit": "fork from XeKr with Blockbench",
 	"parent": "block/block",
 	"ambientocclusion": false,
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "brass_stamping_platform",
-		"particle": "brass_stamping_platform"
+		"0": "anvilcraft_simple_processing:block/advanced_stamping_platform",
+		"particle": "anvilcraft_simple_processing:block/advanced_stamping_platform"
 	},
 	"elements": [
 		{
@@ -181,7 +181,7 @@
 	],
 	"groups": [
 		{
-			"name": "brass_stamping_platform",
+			"name": "advanced_stamping_platform",
 			"origin": [8, 8, 8],
 			"color": 0,
 			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]

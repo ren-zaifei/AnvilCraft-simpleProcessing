@@ -13,5 +13,10 @@ public final class RenderRegister {
                 event -> event.registerBlockEntityRenderer(
                         ModBlockEntities.ADVANCED_STAMPING_PLATFORM.get(),
                         AdvancedStampingPlatformRenderer::new));
+
+        modBus.addListener(EntityRenderersEvent.RegisterRenderers.class,
+                event -> event.registerBlockEntityRenderer(
+                        ModBlockEntities.ADVANCED_CRUSHING_TABLE.get(),
+                        AdvancedCrushingTableRenderer::new));
     }
 }

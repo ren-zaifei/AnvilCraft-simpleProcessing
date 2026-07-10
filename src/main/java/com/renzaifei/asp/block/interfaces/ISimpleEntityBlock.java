@@ -108,7 +108,7 @@ public interface ISimpleEntityBlock<T extends BlockEntity> extends EntityBlock {
         }
         // 手持物品 → 存入
         ItemStack leftover = SimpleBlockEntity
-                .insertIntoHandler(inputHandler, handStack);
+                .insertIntoHandler(inputHandler, handStack, true);
         if (leftover.getCount() != handStack.getCount()) {
             player.setItemInHand(hand, leftover);
             return ItemInteractionResult.SUCCESS;

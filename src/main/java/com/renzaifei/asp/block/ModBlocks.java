@@ -1,17 +1,23 @@
 package com.renzaifei.asp.block;
 
+import com.renzaifei.asp.entity.block.AdvancedCrushingTableBlockEntity;
 import com.renzaifei.asp.entity.block.AdvancedStampingPlatformBlockEntity;
 import com.renzaifei.asp.item.ModItemGroups;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.block.CrushingTableBlock;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.neoforged.neoforge.common.Tags;
 
 import static com.renzaifei.asp.AnvilCraftSimpleProcessing.REGISTRATE;
 
@@ -43,5 +49,22 @@ public class ModBlocks {
                         .save(provider);
             })
             .simpleBlockEntity(AdvancedStampingPlatformBlockEntity::new)
+            .register();
+
+
+    public static final BlockEntry<? extends Block> ADVANCED_CRUSHING_TABLE = REGISTRATE
+            .block("advanced_crushing_table", AdvancedCrushingTableBlock::new)
+            .initialProperties(() -> Blocks.IRON_BLOCK)
+            .properties(p -> p.isValidSpawn(Blocks::never))
+            .blockstate(DataGenUtil::noExtraModelOrState)
+            .simpleItem()
+            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+            .recipe((ctx, provider) -> {
+                ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
+                        .requires(ModBlocks.ADVANCED_STAMPING_PLATFORM)
+                        .requires(Items.GRINDSTONE)
+                        .unlockedBy("has_" + Items.GRINDSTONE, AnvilCraftDatagen.has(Items.GRINDSTONE))
+                        .save(provider);
+            })
             .register();
 }

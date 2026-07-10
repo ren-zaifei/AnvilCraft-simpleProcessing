@@ -8,19 +8,32 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import static com.renzaifei.asp.AnvilCraftSimpleProcessing.REGISTRATE;
 
 public class ModBlockEntities {
-    public static final BlockEntityEntry<AdvancedStampingPlatformBlockEntity> ADVANCED_STAMPING_PLATFORM = REGISTRATE
-            .blockEntity("advanced_stamping_platform", AdvancedStampingPlatformBlockEntity::createBlockEntity)
-            .validBlock(ModBlocks.ADVANCED_STAMPING_PLATFORM)
-            .register();
 
-    public static void register() {
-    }
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(
                 Capabilities.ItemHandler.BLOCK,
                 ADVANCED_STAMPING_PLATFORM.get(),
-                AdvancedStampingPlatformBlockEntity::getInputItemHandler
+                (be, side) -> be.getCombinedItemHandler()
         );
+
+        event.registerBlockEntity(
+                Capabilities.ItemHandler.BLOCK,
+                ADVANCED_CRUSHING_TABLE.get(),
+                (be, side) -> be.getCombinedItemHandler()
+        );
+    }
+
+    public static final BlockEntityEntry<AdvancedStampingPlatformBlockEntity> ADVANCED_STAMPING_PLATFORM = REGISTRATE
+            .blockEntity("advanced_stamping_platform", AdvancedStampingPlatformBlockEntity::createBlockEntity)
+            .validBlock(ModBlocks.ADVANCED_STAMPING_PLATFORM)
+            .register();
+
+    public static final BlockEntityEntry<AdvancedCrushingTableBlockEntity> ADVANCED_CRUSHING_TABLE = REGISTRATE
+            .blockEntity("advanced_crushing_table", AdvancedCrushingTableBlockEntity::createBlockEntity)
+            .validBlock(ModBlocks.ADVANCED_CRUSHING_TABLE)
+            .register();
+
+    public static void register() {
     }
 }

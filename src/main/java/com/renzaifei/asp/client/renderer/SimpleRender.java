@@ -14,6 +14,9 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.items.IItemHandler;
+
+import javax.annotation.Nullable;
 
 public abstract class SimpleRender<T extends SimpleBlockEntity> implements BlockEntityRenderer<T> {
 
@@ -22,11 +25,11 @@ public abstract class SimpleRender<T extends SimpleBlockEntity> implements Block
     private static final int DEFAULT_ROT_ANGLE  = 90;
     private static final Vec3 DEFAULT_SCALE      = new Vec3(0.5, 0.5, 0.5);
 
-    private final ItemRenderer itemRenderer;
-    private final int maxRenders;
-    private final Vec3 renderPos;
-    private final int rotAngle;
-    private final Vec3 scale;
+    protected final ItemRenderer itemRenderer;
+    protected final int maxRenders;
+    protected final Vec3 renderPos;
+    protected final int rotAngle;
+    protected final Vec3 scale;
 
     protected SimpleRender(BlockEntityRendererProvider.Context ctx) {
         this(ctx, DEFAULT_MAX_RENDERS, DEFAULT_RENDER_POS, DEFAULT_ROT_ANGLE, DEFAULT_SCALE);
@@ -34,6 +37,10 @@ public abstract class SimpleRender<T extends SimpleBlockEntity> implements Block
 
     protected SimpleRender(BlockEntityRendererProvider.Context ctx, int maxRenders) {
         this(ctx, maxRenders, DEFAULT_RENDER_POS, DEFAULT_ROT_ANGLE, DEFAULT_SCALE);
+    }
+
+    protected SimpleRender(BlockEntityRendererProvider.Context ctx, Vec3 renderPos) {
+        this(ctx, DEFAULT_MAX_RENDERS, renderPos, DEFAULT_ROT_ANGLE, DEFAULT_SCALE);
     }
 
     protected SimpleRender(BlockEntityRendererProvider.Context ctx, Vec3 renderPos, int rotAngle) {
@@ -49,8 +56,10 @@ public abstract class SimpleRender<T extends SimpleBlockEntity> implements Block
         this.scale = scale;
     }
 
-    private void RandomArray(PoseStack poseStack , RandomSource random , int i ,Direction facing) {
-        poseStack.mulPose(Axis.YP.rotationDegrees(facing.toYRot()));
+    private void RandomArray(PoseStack poseStack , RandomSource random , int i ,@Nullable Direction facing) {
+        if (facing != null) {
+            poseStack.mulPose(Axis.YP.rotationDegrees(180f - facing.toYRot()));
+        }
         float dx = (random.nextFloat() - 0.5f) * 0.15f;
         float dz = (random.nextFloat() - 0.5f) * 0.15f;
         poseStack.translate(dx, i * 0.015625, dz);
@@ -64,12 +73,26 @@ public abstract class SimpleRender<T extends SimpleBlockEntity> implements Block
                        PoseStack poseStack, MultiBufferSource buffer,
                        int packedLight, int packedOverlay) {
 
-        int slots = be.getInputItemHandler(null).getSlots();
         int height = 0;
-        for (int i = 0; i< slots ; i++) {
-            ItemStack stack = be.getInputItemHandler(null).getStackInSlot(i);
+        height = renderHandlerItems(be.getInputItemHandler(null), be, height, poseStack, buffer, packedLight);
+        height = renderHandlerItems(be.getOutputItemHandler(null), be, height, poseStack, buffer, packedLight);
+    }
+
+    /** 渲染一个 IItemHandler 中的所有物品，返回渲染后的累计高度 */
+    private int renderHandlerItems(IItemHandler handler, T be, int height,
+                                   PoseStack poseStack, MultiBufferSource buffer,
+                                   int packedLight) {
+        if (handler == null) return height;
+        int slots = handler.getSlots();
+        for (int i = 0; i < slots; i++) {
+            ItemStack stack = handler.getStackInSlot(i);
             if (stack.isEmpty()) continue;
-            Direction facing = be.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+            Direction facing = null;
+            try {
+                facing = be.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+            } catch (IllegalArgumentException e) {
+                // 该方块没有 HORIZONTAL_FACING 属性，忽略
+            }
             int count = stack.getCount();
             int renders = Math.min(count, this.maxRenders);
             RandomSource random = RandomSource.create(stack.hashCode());
@@ -77,14 +100,14 @@ public abstract class SimpleRender<T extends SimpleBlockEntity> implements Block
                 height++;
                 poseStack.pushPose();
                 poseStack.translate(this.renderPos.x, this.renderPos.y, this.renderPos.z);
-                this.RandomArray(poseStack,random,height,facing);
+                this.RandomArray(poseStack, random, height, facing);
                 poseStack.scale((float) this.scale.x, (float) this.scale.y, (float) this.scale.z);
                 this.itemRenderer.renderStatic(stack, ItemDisplayContext.FIXED,
                         packedLight, OverlayTexture.NO_OVERLAY,
                         poseStack, buffer, be.getLevel(), 0);
-
                 poseStack.popPose();
             }
         }
+        return height;
     }
 }
