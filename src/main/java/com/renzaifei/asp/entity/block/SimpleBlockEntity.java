@@ -316,6 +316,61 @@ public abstract class SimpleBlockEntity extends BlockEntity {
     }
 
     /**
+     * 计算比较器输出信号强度，基于实际的输入/输出槽位。
+     *
+     * @return 0～15 的红石信号强度
+     */
+    public int calculateComparatorSignal() {
+        IItemHandler in = getInputItemHandler(null);
+        IItemHandler out = getOutputItemHandler(null);
+        boolean hasIn = in != null && in.getSlots() > 0;
+        boolean hasOut = out != null && out.getSlots() > 0;
+        if (hasIn && hasOut) return calculateComparatorSignal(in, out);
+        if (hasIn) return calculateComparatorSignal(in);
+        if (hasOut) return calculateComparatorSignal(out);
+        return 0;
+    }
+
+    /**
+     * 静态工具方法：根据多个 IItemHandler 计算比较器信号。
+     *
+     */
+    public static int calculateComparatorSignal(IItemHandler... handlers) {
+        int totalSlots = 0;
+        float fullness = 0.0F;
+
+        for (IItemHandler handler : handlers) {
+            int slots = handler.getSlots();
+            totalSlots += slots;
+            for (int i = 0; i < slots; i++) {
+                ItemStack stack = handler.getStackInSlot(i);
+                if (!stack.isEmpty()) {
+                    float maxSize = Math.min(handler.getSlotLimit(i), stack.getMaxStackSize());
+                    fullness += (float) stack.getCount() / maxSize;
+                }
+            }
+        }
+
+        if (totalSlots == 0 || fullness == 0.0F) return 0;
+        fullness = fullness / (float) totalSlots;
+        return (int) Math.ceil(fullness * 14.0F) + 1;
+    }
+
+    /**
+     * 从世界坐标获取方块实体的比较器信号，供 Block 层调用。
+     *
+     * @param level 当前世界
+     * @param pos   方块坐标
+     * @return 0～15 的红石信号强度，若该位置无 SimpleBlockEntity 则返回 0
+     */
+    public static int getComparatorSignal(Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof SimpleBlockEntity be) {
+            return be.calculateComparatorSignal();
+        }
+        return 0;
+    }
+
+    /**
      * 组合 IItemHandler，将input和output槽位合并
      */
     private record CombinedItemHandler(IItemHandler input, IItemHandler output) implements IItemHandler {
