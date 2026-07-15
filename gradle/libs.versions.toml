@@ -7,7 +7,6 @@ anvilcraft = "1.5.0+hotfix.1572"
 modDevGradle = "2.0.78"
 lombok = "8.7.1"
 jei = "19.32.0.358"
-jade = "15.3.4+neoforge"
 
 [libraries]
 registrate = { group = "com.tterrag.registrate", name = "Registrate", version.ref = "registrate" }
@@ -16,7 +15,6 @@ anvilcraft = { group = "dev.dubhe", name = "anvilcraft-neoforge-1.21.1", version
 jei-common-api = { group = "mezz.jei", name = "jei-1.21.1-common-api", version.ref = "jei" }
 jei-forge-api = { group = "mezz.jei", name = "jei-1.21.1-neoforge-api", version.ref = "jei" }
 jei-forge = { group = "mezz.jei", name = "jei-1.21.1-neoforge", version.ref = "jei" }
-jade = { group = "maven.modrinth", name = "jade", version.ref = "jade" }
 
 [plugins]
 modDevGradle = { id = "net.neoforged.moddev", version.ref = "modDevGradle" }

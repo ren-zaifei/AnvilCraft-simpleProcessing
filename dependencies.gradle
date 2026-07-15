@@ -16,7 +16,4 @@ dependencies {
     compileClasspath(libs.jei.forge) { transitive = false }
     runtimeClasspath(libs.jei.forge) { transitive = false }
 
-    // Jade
-    compileClasspath(libs.jade)
-    runtimeClasspath(libs.jade)
 }
