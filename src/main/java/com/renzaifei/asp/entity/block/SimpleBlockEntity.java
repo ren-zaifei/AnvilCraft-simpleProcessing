@@ -23,7 +23,7 @@ import java.util.List;
 
 public abstract class SimpleBlockEntity extends BlockEntity {
     /**
-     * 此构造函数的input与output槽位会自动构建
+     * 默认构造函数，各创建1槽位的输入输出
      * @param type
      * @param pos
      * @param blockState
@@ -121,10 +121,26 @@ public abstract class SimpleBlockEntity extends BlockEntity {
     }
 
     /**
+     * 是否允许从指定面与物品槽位交互。
+     * 默认禁止底面
+     *
+     * @param side 交互面，可能为 {@code null}
+     * @return {@code true} 允许交互
+     */
+    public boolean canInteractFromSide(@Nullable Direction side) {
+        return side != Direction.DOWN;
+    }
+
+    /**
      * 获取组合的物品处理器（input + output），用于 Jade 等模组展示全部槽位。
      * input 槽位在前，output 槽位在后。
+     * 当 {@code side} 为 {@link Direction#DOWN} 时返回 {@code null}，阻止漏斗等从底部交互。
+     *
+     * @param side 交互面，可能为 {@code null}
      */
-    public IItemHandler getCombinedItemHandler() {
+    @Nullable
+    public IItemHandler getCombinedItemHandler(@Nullable Direction side) {
+        if (!canInteractFromSide(side)) return null;
         return new CombinedItemHandler(input, output);
     }
 

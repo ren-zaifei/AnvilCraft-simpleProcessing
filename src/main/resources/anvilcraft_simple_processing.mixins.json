@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "integration.jei.ItemCrushCategoryMixin",
-    "integration.jei.StampingCategoryMixin"
+    "integration.jei.MeshRecipeCategoryMixin",
+    "integration.jei.StampingCategoryMixin",
+    "integration.jei.UnpackCategoryMixin"
   ],
   "client": [
   ],

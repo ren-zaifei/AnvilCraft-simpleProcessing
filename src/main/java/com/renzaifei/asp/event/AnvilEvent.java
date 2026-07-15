@@ -4,12 +4,15 @@ import com.renzaifei.asp.AnvilCraftSimpleProcessing;
 import com.renzaifei.asp.block.ModBlocks;
 import com.renzaifei.asp.entity.block.AdvancedCrushingTableBlockEntity;
 import com.renzaifei.asp.entity.block.AdvancedStampingPlatformBlockEntity;
+import com.renzaifei.asp.entity.block.SimpleBlockEntity;
 import com.renzaifei.asp.util.RecipeUtil;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCrushRecipe;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -33,15 +36,21 @@ public class AnvilEvent {
             onAdvancedStampingPlatform(level, hitBlockPos, hitBlockState);
         }
         if (hitBlockState.is(ModBlocks.ADVANCED_CRUSHING_TABLE.get())) {
-            onAdvancedCrushingTable(level, hitBlockPos);
+            generateResult(level, hitBlockPos,ModRecipeTypes.ITEM_CRUSH_TYPE.get());
+        }
+        if (hitBlockState.is(ModBlocks.ADVANCED_UNPACK_TABLE.get())) {
+            generateResult(level, hitBlockPos,ModRecipeTypes.UNPACK_TYPE.get());
+        }
+        if (hitBlockState.is(ModBlocks.ADVANCED_MESH_TABLE.get())) {
+            generateResult(level, hitBlockPos,ModRecipeTypes.MESH_TYPE.get());
         }
     }
 
-    private static void onAdvancedCrushingTable(Level level , BlockPos hitBlockPos) {
-        var be = (AdvancedCrushingTableBlockEntity) level.getBlockEntity(hitBlockPos);
+    private static void generateResult(Level level , BlockPos hitBlockPos , RecipeType<?> RecipeType) {
+        var be = (SimpleBlockEntity) level.getBlockEntity(hitBlockPos);
         if (be == null) return;
         List<ItemStack> outputs = RecipeUtil.craft(
-                ModRecipeTypes.ITEM_CRUSH_TYPE.get(), be.getInputItemHandler(null),
+                RecipeType, be.getInputItemHandler(null),
                 (ServerLevel) level);
         if (outputs.isEmpty()) return;
         AnvilUtil.dropItems(outputs, level, new Vec3(hitBlockPos.getX() + 0.5, hitBlockPos.getY(), hitBlockPos.getZ() + 0.5));

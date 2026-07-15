@@ -14,6 +14,8 @@ public class ModEnUsLangProvider extends LanguageProvider {
     protected void addTranslations() {
         add(ModBlocks.ADVANCED_STAMPING_PLATFORM.get(), "Advanced Stamping Platform");
         add(ModBlocks.ADVANCED_CRUSHING_TABLE.get(), "Advanced Crushing Table");
+        add(ModBlocks.ADVANCED_UNPACK_TABLE.get(), "Advanced Unpack Table");
+        add(ModBlocks.ADVANCED_MESH_TABLE.get(), "Advanced Mesh Table");
 
         add("itemGroup.anvilcraft_simple_processing.anvilcraft_simple_processing_items" , "AnvilCraft : SimpleProcessing");
 

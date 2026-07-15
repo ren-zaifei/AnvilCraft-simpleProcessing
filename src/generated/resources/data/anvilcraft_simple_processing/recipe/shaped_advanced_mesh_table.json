@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ingots/magnet"
+    },
+    "B": {
+      "tag": "c:ingots/brass"
+    },
+    "C": {
+      "tag": "minecraft:planks"
+    },
+    "D": {
+      "item": "minecraft:scaffolding"
+    }
+  },
+  "pattern": [
+    "CAC",
+    "BDB",
+    "B B"
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft_simple_processing:advanced_mesh_table"
+  }
+}

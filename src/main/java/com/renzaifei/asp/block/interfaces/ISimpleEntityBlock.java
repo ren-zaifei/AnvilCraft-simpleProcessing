@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public interface ISimpleEntityBlock<T extends BlockEntity> extends EntityBlock {
 
 
-    /** 方块对应的 BlockEntityType。通常为 {@code ModBlockEntities.XXX.get()}。 */
+    /** 方块对应的 BlockEntityType。*/
     BlockEntityType<T> getBlockEntityType();
 
     /** 创建 BlockEntity 实例。 */

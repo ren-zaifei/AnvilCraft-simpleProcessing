@@ -56,6 +56,13 @@ public abstract class SimpleRender<T extends SimpleBlockEntity> implements Block
         this.scale = scale;
     }
 
+    /**
+     * 生成随机位置
+     * @param poseStack
+     * @param random
+     * @param i
+     * @param facing
+     */
     private void RandomArray(PoseStack poseStack , RandomSource random , int i ,@Nullable Direction facing) {
         if (facing != null) {
             poseStack.mulPose(Axis.YP.rotationDegrees(180f - facing.toYRot()));
@@ -91,7 +98,7 @@ public abstract class SimpleRender<T extends SimpleBlockEntity> implements Block
             try {
                 facing = be.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
             } catch (IllegalArgumentException e) {
-                // 该方块没有 HORIZONTAL_FACING 属性，忽略
+
             }
             int count = stack.getCount();
             int renders = Math.min(count, this.maxRenders);

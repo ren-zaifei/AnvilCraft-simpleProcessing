@@ -18,5 +18,15 @@ public final class RenderRegister {
                 event -> event.registerBlockEntityRenderer(
                         ModBlockEntities.ADVANCED_CRUSHING_TABLE.get(),
                         AdvancedCrushingTableRenderer::new));
+
+        modBus.addListener(EntityRenderersEvent.RegisterRenderers.class,
+                event -> event.registerBlockEntityRenderer(
+                        ModBlockEntities.ADVANCED_UNPACK_TABLE.get(),
+                        AdvancedUnpackTableRenderer::new));
+
+        modBus.addListener(EntityRenderersEvent.RegisterRenderers.class,
+                event -> event.registerBlockEntityRenderer(
+                        ModBlockEntities.ADVANCED_MESH_TABLE.get(),
+                        AdvancedMeshTableRenderer::new));
     }
 }
