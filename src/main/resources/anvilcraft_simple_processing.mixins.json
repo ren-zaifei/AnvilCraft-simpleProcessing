@@ -1,0 +1,20 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.renzaifei.asp.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "integration.jei.ItemCrushCategoryMixin",
+    "integration.jei.MeshRecipeCategoryMixin",
+    "integration.jei.StampingCategoryMixin",
+    "integration.jei.UnpackCategoryMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
