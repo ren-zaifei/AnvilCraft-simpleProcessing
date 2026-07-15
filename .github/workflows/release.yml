@@ -51,11 +51,11 @@ jobs:
           path: build/libs/${{ steps.properties.outputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
 
       - name: Upload Release Jar
-        uses: softprops/action-gh-release@v2.2.1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          files: |
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} \
             build/libs/${{ steps.properties.outputs.mod_id }}-neoforge-${{ steps.version.outputs.version }}.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: publish neoforge mc mod
         uses: Kir-Antipov/mc-publish@v3.3
