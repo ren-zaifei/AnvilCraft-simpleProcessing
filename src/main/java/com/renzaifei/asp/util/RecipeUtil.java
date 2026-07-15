@@ -1,7 +1,7 @@
 package com.renzaifei.asp.util;
 
-import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
-import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.v2.util.predicate.ChanceItemStack;
+import dev.anvilcraft.lib.v2.util.predicate.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.AbstractProcessRecipe;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;

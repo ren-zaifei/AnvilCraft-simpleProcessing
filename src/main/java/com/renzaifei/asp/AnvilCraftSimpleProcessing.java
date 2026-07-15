@@ -4,7 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.renzaifei.asp.block.ModBlocks;
 import com.renzaifei.asp.entity.block.ModBlockEntities;
 import com.renzaifei.asp.item.ModItemGroups;
-import com.tterrag.registrate.Registrate;
+import dev.anvilcraft.lib.v2.registrum.Registrum;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 public class AnvilCraftSimpleProcessing {
     public static final String MOD_ID = "anvilcraft_simple_processing";
     public static final Logger LOGGER = LogUtils.getLogger();
-    public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
+    public static final Registrum REGISTRATE = Registrum.create(MOD_ID);
 
     public AnvilCraftSimpleProcessing(IEventBus modEventBus, ModContainer modContainer) {
         ModBlocks.register();
