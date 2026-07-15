@@ -7,7 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
-@EventBusSubscriber(modid = AnvilCraftSimpleProcessing.MOD_ID,bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AnvilCraftSimpleProcessing.MOD_ID)
 public class ModDataGenerator {
 
     @SubscribeEvent

@@ -1,7 +1,7 @@
 package com.renzaifei.asp.entity.block;
 
 import com.renzaifei.asp.block.ModBlocks;
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import dev.anvilcraft.lib.v2.registrum.util.entry.BlockEntityEntry;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
