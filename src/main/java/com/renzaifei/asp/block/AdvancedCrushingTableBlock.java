@@ -3,6 +3,7 @@ package com.renzaifei.asp.block;
 import com.renzaifei.asp.block.interfaces.ISimpleEntityBlock;
 import com.renzaifei.asp.entity.block.AdvancedCrushingTableBlockEntity;
 import com.renzaifei.asp.entity.block.ModBlockEntities;
+import com.renzaifei.asp.entity.block.SimpleBlockEntity;
 import dev.dubhe.anvilcraft.block.CrushingTableBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -67,5 +68,15 @@ public class AdvancedCrushingTableBlock extends CrushingTableBlock implements IS
                          BlockState newState, boolean movedByPiston) {
         ISimpleEntityBlock.super.onRemove(state, level, pos, newState, movedByPiston);
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return SimpleBlockEntity.getComparatorSignal(level, pos);
     }
 }

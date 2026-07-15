@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class AdvancedCrushingTableBlockEntity extends SimpleBlockEntity{
     public AdvancedCrushingTableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
-        super(type, pos, blockState);
+        super(type, pos, blockState , 1,0);
     }
 
     public static AdvancedCrushingTableBlockEntity createBlockEntity(
