@@ -25,12 +25,12 @@
 
 ### Dependencies
 
-| Dependency | Required |
-| --- | --- |
-| [Minecraft](https://www.minecraft.net/) 1.21.1 | ✅ |
-| [NeoForge](https://neoforged.net/) 21.1+ | ✅ |
-| [AnvilCraft](https://github.com/Anvil-Dev/AnvilCraft) | ✅ |
-| [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) | ❌ Optional |
+| Dependency                                                 | Required |
+|------------------------------------------------------------| --- |
+| [Minecraft](https://www.minecraft.net/) 1.21.1             | ✅ |
+| [NeoForge](https://neoforged.net/) 21.1+                   | ✅ |
+| [AnvilCraft](https://github.com/Anvil-Dev/AnvilCraft) 1.6+ | ✅ |
+| [JEI](https://www.curseforge.com/minecraft/mc-mods/jei)    | ❌ Optional |
 
 ### License
 
@@ -58,12 +58,12 @@ This mod is licensed under the [MIT License](LICENSE).
 
 ### 依赖
 
-| 依赖 | 是否必需 |
-| --- | --- |
-| [Minecraft](https://www.minecraft.net/) 1.21.1 | ✅ 必需 |
-| [NeoForge](https://neoforged.net/) 21.1+ | ✅ 必需 |
-| [AnvilCraft](https://github.com/Anvil-Dev/AnvilCraft) | ✅ 必需 |
-| [JEI](https://www.curseforge.com/minecraft/mc-mods/jei) | ❌ 可选 |
+| 依赖                                                         | 是否必需 |
+|------------------------------------------------------------|------|
+| [Minecraft](https://www.minecraft.net/) 1.21.1             | ✅ 必需 |
+| [NeoForge](https://neoforged.net/) 21.1+                   | ✅ 必需 |
+| [AnvilCraft](https://github.com/Anvil-Dev/AnvilCraft) 1.6+ | ✅ 必需 |
+| [JEI](https://www.curseforge.com/minecraft/mc-mods/jei)    | ❌ 可选 |
 
 ### 许可证
 

@@ -2,12 +2,10 @@ package com.renzaifei.asp.event;
 
 import com.renzaifei.asp.AnvilCraftSimpleProcessing;
 import com.renzaifei.asp.block.ModBlocks;
-import com.renzaifei.asp.entity.block.AdvancedCrushingTableBlockEntity;
 import com.renzaifei.asp.entity.block.AdvancedStampingPlatformBlockEntity;
 import com.renzaifei.asp.entity.block.SimpleBlockEntity;
 import com.renzaifei.asp.util.RecipeUtil;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCrushRecipe;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -36,7 +34,7 @@ public class AnvilEvent {
             onAdvancedStampingPlatform(level, hitBlockPos, hitBlockState);
         }
         if (hitBlockState.is(ModBlocks.ADVANCED_CRUSHING_TABLE.get())) {
-            generateResult(level, hitBlockPos,ModRecipeTypes.ITEM_CRUSH_TYPE.get());
+            generateResult(level, hitBlockPos, ModRecipeTypes.ITEM_CRUSH_TYPE.get());
         }
         if (hitBlockState.is(ModBlocks.ADVANCED_UNPACK_TABLE.get())) {
             generateResult(level, hitBlockPos,ModRecipeTypes.UNPACK_TYPE.get());

@@ -3,7 +3,7 @@ package com.renzaifei.asp.block;
 import com.renzaifei.asp.AnvilCraftSimpleProcessing;
 import com.renzaifei.asp.entity.block.AdvancedStampingPlatformBlockEntity;
 import com.renzaifei.asp.item.ModItemGroups;
-import com.tterrag.registrate.util.entry.BlockEntry;
+import dev.anvilcraft.lib.v2.registrum.util.entry.BlockEntry;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
