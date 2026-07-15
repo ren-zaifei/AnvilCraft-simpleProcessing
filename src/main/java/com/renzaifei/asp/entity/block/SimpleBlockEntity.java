@@ -316,13 +316,19 @@ public abstract class SimpleBlockEntity extends BlockEntity {
     }
 
     /**
-     * 计算比较器输出信号强度，基于 input + output 槽位的物品填充程度。
-     * 使用原版 {@code AbstractContainerMenu.getRedstoneSignalFromContainer} 的公式。
+     * 计算比较器输出信号强度，基于实际的输入/输出槽位。
      *
      * @return 0～15 的红石信号强度
      */
     public int calculateComparatorSignal() {
-        return calculateComparatorSignal(input, output);
+        IItemHandler in = getInputItemHandler(null);
+        IItemHandler out = getOutputItemHandler(null);
+        boolean hasIn = in != null && in.getSlots() > 0;
+        boolean hasOut = out != null && out.getSlots() > 0;
+        if (hasIn && hasOut) return calculateComparatorSignal(in, out);
+        if (hasIn) return calculateComparatorSignal(in);
+        if (hasOut) return calculateComparatorSignal(out);
+        return 0;
     }
 
     /**
