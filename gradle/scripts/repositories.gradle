@@ -16,4 +16,11 @@ repositories {
             includeGroup "com.tterrag.registrate"
         }
     }
+    maven { // JEI
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+        content {
+            includeGroup "mezz.jei"
+        }
+    }
 }

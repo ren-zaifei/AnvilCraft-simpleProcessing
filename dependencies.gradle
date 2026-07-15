@@ -9,4 +9,11 @@ dependencies {
     // AnvilCraft
     implementation(libs.anvilcraft) { transitive = false }
     interfaceInjectionData(libs.anvilcraft) { transitive = false }
+
+    // JEI
+    compileClasspath(libs.jei.common.api) { transitive = false }
+    compileClasspath(libs.jei.forge.api) { transitive = false }
+    compileClasspath(libs.jei.forge) { transitive = false }
+    runtimeClasspath(libs.jei.forge) { transitive = false }
+
 }
