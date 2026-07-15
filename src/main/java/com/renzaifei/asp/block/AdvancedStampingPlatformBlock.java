@@ -3,6 +3,7 @@ package com.renzaifei.asp.block;
 import com.renzaifei.asp.block.interfaces.ISimpleEntityBlock;
 import com.renzaifei.asp.entity.block.AdvancedStampingPlatformBlockEntity;
 import com.renzaifei.asp.entity.block.ModBlockEntities;
+import com.renzaifei.asp.entity.block.SimpleBlockEntity;
 import dev.dubhe.anvilcraft.block.StampingPlatformBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -65,5 +66,15 @@ public class AdvancedStampingPlatformBlock extends StampingPlatformBlock impleme
                          BlockState newState, boolean movedByPiston) {
         ISimpleEntityBlock.super.onRemove(state, level, pos, newState, movedByPiston);
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return SimpleBlockEntity.getComparatorSignal(level, pos);
     }
 }
