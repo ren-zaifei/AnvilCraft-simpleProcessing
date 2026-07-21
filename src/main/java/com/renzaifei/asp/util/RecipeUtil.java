@@ -2,8 +2,11 @@ package com.renzaifei.asp.util;
 
 import dev.anvilcraft.lib.v2.util.predicate.ChanceItemStack;
 import dev.anvilcraft.lib.v2.util.predicate.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.AbstractProcessRecipe;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -51,6 +54,53 @@ public final class RecipeUtil {
                 : tryCraftMulti(inputHandler, inputs, recipes, serverLevel);
 
         return Collections.unmodifiableList(outputs);
+    }
+
+    // ==================== 多合一锻造模板合成 ====================
+
+    /**
+     * 尝试将输入槽中不同种类的 {@code #anvilcraft:templates} 标签物品合成为多合一锻造模板。
+     * 忽略非模板物品（保留在槽中不动），只消费带有该标签的物品。
+     * <ul>
+     *   <li>恰好 2 种不同模板物品 → 二合一锻造模板</li>
+     *   <li>恰好 4 种不同模板物品 → 四合一锻造模板</li>
+     *   <li>恰好 8 种不同模板物品 → 八合一锻造模板</li>
+     * </ul>
+     *
+     * @param inputHandler 输入槽位（会直接修改）
+     * @return 产物列表；不满足条件时返回空列表
+     */
+    public static List<ItemStack> tryCraftSmithingTemplate(
+            IItemHandler inputHandler) {
+
+        List<ItemStack> inputs = collectInputs(inputHandler);
+        if (inputs.isEmpty()) return List.of();
+
+        // 筛选出带有 #anvilcraft:templates 标签的物品，且种类各不相同
+        List<ItemStack> templateStacks = new ArrayList<>();
+        Set<Item> seenItems = new HashSet<>();
+        for (ItemStack stack : inputs) {
+            if (!stack.is(ModItemTags.TEMPLATES)) continue; // 跳过杂物
+            if (!seenItems.add(stack.getItem())) return List.of(); // 有重复种类，不合成
+            templateStacks.add(stack);
+        }
+
+        // 模板物品数量必须恰好为 2、4 或 8
+        if (templateStacks.isEmpty()) return List.of();
+        Item resultItem;
+        switch (templateStacks.size()) {
+            case 2 -> resultItem = ModItems.TWO_TO_ONE_SMITHING_TEMPLATE.get();
+            case 4 -> resultItem = ModItems.FOUR_TO_ONE_SMITHING_TEMPLATE.get();
+            case 8 -> resultItem = ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE.get();
+            default -> { return List.of(); }
+        }
+
+        // 只消耗模板物品（每种 1 个），杂物保留不动
+        for (ItemStack stack : templateStacks) {
+            extractSlot(inputHandler, stack, 1);
+        }
+
+        return List.of(new ItemStack(resultItem));
     }
 
     // ==================== 单输入合成 ====================
