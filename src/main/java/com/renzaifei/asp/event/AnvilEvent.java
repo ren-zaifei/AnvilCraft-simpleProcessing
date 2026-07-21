@@ -58,9 +58,14 @@ public class AnvilEvent {
                                                     BlockState hitBlockState) {
         var be = (AdvancedStampingPlatformBlockEntity) level.getBlockEntity(hitBlockPos);
         if (be == null) return;
+        var serverLevel = (ServerLevel) level;
         List<ItemStack> outputs = RecipeUtil.craft(
                 ModRecipeTypes.STAMPING_TYPE.get(), be.getInputItemHandler(null),
-                (ServerLevel) level);
+                serverLevel);
+        if (outputs.isEmpty()) {
+            outputs = RecipeUtil.tryCraftSmithingTemplate(
+                    be.getInputItemHandler(null));
+        }
         if (outputs.isEmpty()) return;
         var facing = hitBlockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
         BlockPos frontPos = hitBlockPos.relative(facing);
